@@ -1,0 +1,45 @@
+version: '3.8'
+
+services:
+  db_busnes_services:
+    image: postgres:16
+    container_name: db_busnes_services
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postrgres
+      POSTGRES_DB: postgres
+    networks:
+      - devision_busnes_services
+    ports:
+      - "5433:5432"
+
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: pgadmin
+    environment:
+      PGADMIN_DEFAULT_EMAIL: "admin@admin.com"
+      PGADMIN_DEFAULT_PASSWORD: "admin"
+    ports:
+      - "5050:80"
+    networks:
+      - devision_busnes_services
+    depends_on:
+      - db_busnes_services
+  
+  # busnes_services:
+  #   image: busnes_services
+  #   container_name: busnes_services
+  #   build:
+  #     context: .
+  #   env_file:
+  #     - .env
+  #   networks:
+  #     - devision_busnes_services
+  #   depends_on:
+  #     - db_busnes_services
+  #   ports:
+  #     - '8000:8000'
+
+networks:
+  devision_busnes_services:
+    driver: bridge
