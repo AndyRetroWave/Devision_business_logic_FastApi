@@ -3,8 +3,10 @@ from app.bisnes_services.shemas.sneakers_shemas import SneakerShemas
 
 
 class SneakerService:
-    async def setSneakerDaoin_database(item: SneakerShemas):
-        if await SneakerDao.add_item_in_database(
+    model = SneakerDao
+
+    async def set_sneakers_in_database(self, item: SneakerShemas):
+        if await self.model.add_item_in_database(
             name=item.name,
             brand_id=item.brand_id,
             category=item.category,
