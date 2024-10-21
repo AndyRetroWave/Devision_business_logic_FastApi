@@ -3,10 +3,10 @@ from app.bisnes_services.shemas.brands_shemas import BrandsShemas
 
 
 class BrandsService:
-    dao = BrandDao
+    dao = BrandDao()
 
     async def set_brands_in_database(self, item: BrandsShemas) -> bool:
-        if await self.dao.add_item_in_database(name=item.name, country=item.country):
+        if await self.dao.add_item(name=item.name, country=item.country):
             return True
         return False
 

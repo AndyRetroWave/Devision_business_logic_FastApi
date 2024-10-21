@@ -1,7 +1,7 @@
 from fastapi import APIRouter, HTTPException
 from starlette.status import HTTP_200_OK, HTTP_401_UNAUTHORIZED
 
-from app.bisnes_services.repository.categories_repository import CategoriesService
+from app.bisnes_services.repository.categories_services import CategoriesService
 from app.bisnes_services.shemas.category_shemas import CategoriesShemas
 
 router_categories = APIRouter(

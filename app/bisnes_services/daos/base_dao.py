@@ -1,41 +1,42 @@
-from abc import ABC, abstractmethod
+from asyncio.log import logger
 from typing import Any
 
+from fastapi import HTTPException
 from sqlalchemy import insert, select
+from sqlalchemy.exc import SQLAlchemyError
+from starlette.status import HTTP_401_UNAUTHORIZED
 
 from app.database import async_session_maker
 
 
-class BaseDaoInterface(ABC):
-    @abstractmethod
-    async def add_item(self) -> bool:
-        """Добавление информации в базу"""
-
-    @abstractmethod
-    async def get_item(self) -> Any:
-        """Получение инфы из базы данных"""
-
-
-class BaseDao(BaseDaoInterface):
+class BaseDao:
     model = None
 
-    @classmethod
-    async def add_item_in_database(cls, **kwargs) -> bool:
+    async def _execute_with_session(self, operation, *args, **kwargs):
         try:
             async with async_session_maker() as session:
-                smtp = insert(cls.model).values(**kwargs)
-                await session.execute(smtp)
+                result = await operation(session, *args, **kwargs)
                 await session.commit()
-                return True
-        except Exception:
-            return False
+                return result
+        except SQLAlchemyError as e:
+            logger.error("Произошла ошибка базы", e)
+            raise HTTPException(status_code=HTTP_401_UNAUTHORIZED)
+        except Exception as e:
+            logger.error("Произошла неизвестная ошибка в базе", e)
+            raise HTTPException(status_code=HTTP_401_UNAUTHORIZED)
 
-    @classmethod
-    async def get_item(cls, **kwargs) -> Any:
-        try:
-            async with async_session_maker() as session:
-                smtp = select(cls.model).filter_by(**kwargs)
-                await session.extcute(smtp)
-                return await smtp.scalar()
-        except Exception:
-            return None
+    async def add_item(self, **kwargs) -> bool:
+        async def insert_operation(session, **kwargs):
+            smtp = insert(self.model).values(**kwargs)
+            await session.execute(smtp)
+            return True
+
+        return await self._execute_with_session(insert_operation, **kwargs)
+
+    async def get_item(self, **kwargs) -> Any:
+        async def select_operation(session, **kwargs):
+            smtp = select(self.model).filter_by(**kwargs)
+            result = await session.execute(smtp)
+            return result.scalar()
+
+        return await self._execute_with_session(select_operation, **kwargs)
