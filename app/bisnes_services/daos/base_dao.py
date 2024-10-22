@@ -1,5 +1,4 @@
 from asyncio.log import logger
-from typing import Any
 
 from fastapi import HTTPException
 from sqlalchemy import insert, select
@@ -33,10 +32,9 @@ class BaseDao:
 
         return await self._execute_with_session(insert_operation, **kwargs)
 
-    async def get_item(self, **kwargs) -> Any:
-        async def select_operation(session, **kwargs):
-            smtp = select(self.model).filter_by(**kwargs)
-            result = await session.execute(smtp)
-            return result.scalar()
+    async def get_item(self):
+        async def select_operation(session):
+            result = await session.execute(select(self.model))
+            return result.scalars().all()
 
-        return await self._execute_with_session(select_operation, **kwargs)
+        return await self._execute_with_session(select_operation)

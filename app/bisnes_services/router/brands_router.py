@@ -19,9 +19,13 @@ async def add_a_new_brands(item: BrandsShemas) -> dict:
 
 @router_brands.delete("/delete_brand")
 async def delete_brands_name(name) -> dict:
-    if await repository_brand_servis.delete_brands(name):
-        return {"massege": HTTP_200_OK}
-    raise HTTPException(status_code=HTTP_401_UNAUTHORIZED)
+    try:
+        if await repository_brand_servis.delete_brands(name):
+            return {"massege": HTTP_200_OK}
+        else:
+            return {"massege": "Такого бренда нет в базе данных"}
+    except Exception:
+        raise HTTPException(status_code=HTTP_401_UNAUTHORIZED)
 
 
 @router_brands.get("/get_brands_all")
