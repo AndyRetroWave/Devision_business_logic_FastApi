@@ -1,0 +1,112 @@
+[
+  {
+    "sneaker_id": 10,
+    "name": "Air Jordan 1 Retro High OG",
+    "brand_id": 10,
+    "category": 45,
+    "price": 150.00,
+    "size": "41",
+    "color": "Красный",
+    "description": "Классические кроссовки Air Jordan 1 Retro High OG с красной кожаной отделкой.",
+    "image_url": "https://www.example.com/images/air-jordan-1-retro-high-og-red.jpg"
+  },
+  {
+    "sneaker_id": 20,
+    "name": "Adidas Ultraboost 22",
+    "brand_id": 10,
+    "category": 45,
+    "price": 180.00,
+    "size": "42",
+    "color": "Черный",
+    "description": "Удобные кроссовки Adidas Ultraboost 22 с черным верхом и белой подошвой.",
+    "image_url": "https://www.example.com/images/adidas-ultraboost-22-black.jpg"
+  },
+  {
+    "sneaker_id": 30,
+    "name": "Puma Suede Classic",
+    "brand_id": 10,
+    "category": 45,
+    "price": 80.00,
+    "size": "43",
+    "color": "Синий",
+    "description": "Стильные кроссовки Puma Suede Classic с синим замшевым верхом.",
+    "image_url": "https://www.example.com/images/puma-suede-classic-blue.jpg"
+  },
+  {
+    "sneaker_id": 40,
+    "name": "Reebok Classic Leather",
+    "brand_id": 40,
+    "category": 45,
+    "price": 70.00,
+    "size": "44",
+    "color": "Белый",
+    "description": "Простые и удобные кроссовки Reebok Classic Leather с белым кожаным верхом.",
+    "image_url": "https://www.example.com/images/reebok-classic-leather-white.jpg"
+  },
+  {
+    "sneaker_id": 50,
+    "name": "New Balance 574",
+    "brand_id": 50,
+    "category": 45,
+    "price": 90.00,
+    "size": "45",
+    "color": "Серый",
+    "description": "Популярные кроссовки New Balance 574 с серым верхом и белой подошвой.",
+    "image_url": "https://www.example.com/images/new-balance-574-grey.jpg"
+  },
+  {
+    "sneaker_id": 60,
+    "name": "Converse Chuck Taylor All Star",
+    "brand_id": 60,
+    "category": 45,
+    "price": 60.00,
+    "size": "40",
+    "color": "Черный",
+    "description": "Классические кеды Converse Chuck Taylor All Star с черным верхом.",
+    "image_url": "https://www.example.com/images/converse-chuck-taylor-all-star-black.jpg"
+  },
+  {
+    "sneaker_id": 70,
+    "name": "Vans Old Skool",
+    "brand_id": 70,
+    "category": 45,
+    "price": 50.00,
+    "size": "41",
+    "color": "Синий",
+    "description": "Стильные кеды Vans Old Skool с синим верхом и белой полосой.",
+    "image_url": "https://www.example.com/images/vans-old-skool-blue.jpg"
+  },
+  {
+    "sneaker_id": 80,
+    "name": "Dr. Martens 1460",
+    "brand_id": 80,
+    "category": 46,
+    "price": 120.00,
+    "size": "42",
+    "color": "Черный",
+    "description": "Прочные ботинки Dr. Martens 1460 с черным кожаным верхом.",
+    "image_url": "https://www.example.com/images/dr-martens-1460-black.jpg"
+  },
+  {
+    "sneaker_id": 90,
+    "name": "Timberland 6 Inch Premium",
+    "brand_id": 90,
+    "category": 46,
+    "price": 170.00,
+    "size": "43",
+    "color": "Коричневый",
+    "description": "Классические ботинки Timberland 6 Inch Premium с коричневым кожаным верхом.",
+    "image_url": "https://www.example.com/images/timberland-6-inch-premium-brown.jpg"
+  },
+  {
+    "sneaker_id": 100,
+    "name": "Skechers Go Walk 5",
+    "brand_id": 100,
+    "category": 45,
+    "price": 80.00,
+    "size": "44",
+    "color": "Серый",
+    "description": "Удобные кроссовки Skechers Go Walk 5 с серым верхом.",
+    "image_url": "https://www.example.com/images/skechers-go-walk-5-grey.jpg"
+  }
+]

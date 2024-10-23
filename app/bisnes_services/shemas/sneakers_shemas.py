@@ -12,3 +12,12 @@ class SneakerShemas(BaseModel):
     color: str
     description: str
     image_url: str
+
+
+class SneakerFilterShemas(BaseModel):
+    name: str = None
+    brand_id: int = None
+    price_min: Decimal = None
+    price_max: Decimal = None
+    size: str = None
+    color: str = None

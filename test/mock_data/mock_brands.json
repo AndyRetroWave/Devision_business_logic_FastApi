@@ -1,0 +1,52 @@
+[
+  {
+    "brands_id": 10,
+    "name": "Nike",
+    "country": "США"
+  },
+  {
+    "brands_id": 20,
+    "name": "Adidas",
+    "country": "Германия"
+  },
+  {
+    "brands_id": 30,
+    "name": "Puma",
+    "country": "Германия"
+  },
+  {
+    "brands_id": 40,
+    "name": "Reebok",
+    "country": "США"
+  },
+  {
+    "brands_id": 50,
+    "name": "New Balance",
+    "country": "США"
+  },
+  {
+    "brands_id": 60,
+    "name": "Converse",
+    "country": "США"
+  },
+  {
+    "brands_id": 70,
+    "name": "Vans",
+    "country": "США"
+  },
+  {
+    "brands_id": 80,
+    "name": "Dr. Martens",
+    "country": "Великобритания"
+  },
+  {
+    "brands_id": 90,
+    "name": "Timberland",
+    "country": "США"
+  },
+  {
+    "brands_id": 100,
+    "name": "Skechers",
+    "country": "США"
+  }
+]
