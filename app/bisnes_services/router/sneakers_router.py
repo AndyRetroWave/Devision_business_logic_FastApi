@@ -27,9 +27,9 @@ async def get_sneaker_by_id(id: int):
         raise HTTPException(status_code=HTTP_401_UNAUTHORIZED)
 
 
-@router_sneaker.get("/get_sneakers_by_filter")
+@router_sneaker.get("/get_by_filter")
 async def get_sneaker_by_filter(SneakerFilterShemas: SneakerFilterShemas):
-    result = await sneaker_services.get_sneakers_by_filter(SneakerFilterShemas)
+    result = await sneaker_services.get_by_filter(SneakerFilterShemas)
     if result:
         return result
     else:

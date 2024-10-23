@@ -1,40 +1,45 @@
-from asyncio.log import logger
+from app.logger import logger
 
-from fastapi import HTTPException
 from sqlalchemy import insert, select
-from sqlalchemy.exc import SQLAlchemyError
-from starlette.status import HTTP_401_UNAUTHORIZED
+from sqlalchemy.exc import IntegrityError, OperationalError, SQLAlchemyError
 
 from app.database import async_session_maker
+
+
+def session_handler(func):
+    async def wrapper(self, *args, **kwargs):
+        try:
+            async with async_session_maker() as session:
+                result = await func(self, session, *args, **kwargs)
+                await session.commit()
+                return result
+        except IntegrityError as e:
+            logger.error("Ошибка целостности: %s", e.orig)
+            await session.rollback()
+            raise IndentationError()
+        except OperationalError as e:
+            logger.error("Эксплуатационная ошибка: %s", e.orig)
+            raise OperationalError()
+        except SQLAlchemyError as e:
+            logger.error("Произошла ошибка базы: %s", e.args)
+            raise SQLAlchemyError()
+        except Exception as e:
+            logger.error("Произошла неизвестная ошибка в базе: %s", e.args)
+            raise Exception()
+
+    return wrapper
 
 
 class BaseDao:
     model = None
 
-    async def _execute_with_session(self, operation, *args, **kwargs):
-        try:
-            async with async_session_maker() as session:
-                result = await operation(session, *args, **kwargs)
-                await session.commit()
-                return result
-        except SQLAlchemyError as e:
-            logger.error("Произошла ошибка базы", e)
-            raise HTTPException(status_code=HTTP_401_UNAUTHORIZED)
-        except Exception as e:
-            logger.error("Произошла неизвестная ошибка в базе", e)
-            raise HTTPException(status_code=HTTP_401_UNAUTHORIZED)
+    @session_handler
+    async def add_item(self, session, **kwargs) -> bool:
+        smtp = insert(self.model).values(**kwargs)
+        await session.execute(smtp)
+        return True
 
-    async def add_item(self, **kwargs) -> bool:
-        async def insert_operation(session, **kwargs):
-            smtp = insert(self.model).values(**kwargs)
-            await session.execute(smtp)
-            return True
-
-        return await self._execute_with_session(insert_operation, **kwargs)
-
-    async def get_item(self):
-        async def select_operation(session):
-            result = await session.execute(select(self.model))
-            return result.scalars().all()
-
-        return await self._execute_with_session(select_operation)
+    @session_handler
+    async def get_item(self, session):
+        result = await session.execute(select(self.model))
+        return result.scalars().all()

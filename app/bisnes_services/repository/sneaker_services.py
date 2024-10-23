@@ -28,7 +28,7 @@ class SneakerService:
             return result
         return False
 
-    async def get_sneakers_by_filter(self, item: SneakerFilterShemas):
+    async def get_by_filter(self, item: SneakerFilterShemas):
         name = item.name
         brand_id = item.brand_id
         price = item.price
