@@ -1,4 +1,4 @@
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException, Query
 from starlette.status import HTTP_200_OK, HTTP_401_UNAUTHORIZED
 
 from app.bisnes_services.repository.sneaker_services import SneakerService
@@ -28,9 +28,12 @@ async def get_sneaker_by_id(id: int):
 
 
 @router_sneaker.get("/get_by_filter")
-async def get_sneaker_by_filter(SneakerFilterShemas: SneakerFilterShemas):
-    result = await sneaker_services.get_by_filter(SneakerFilterShemas)
-    if result:
-        return result
-    else:
+async def get_sneaker_by_filter(item: SneakerFilterShemas = Query()):
+    try:
+        result = await sneaker_services.get_by_filter(item)
+        if result:
+            return result
+        else:
+            raise HTTPException(status_code=HTTP_401_UNAUTHORIZED)
+    except Exception:
         raise HTTPException(status_code=HTTP_401_UNAUTHORIZED)

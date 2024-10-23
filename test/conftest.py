@@ -23,7 +23,9 @@ async def prepare_database():
         await conn.run_sync(Base.metadata.create_all)
 
     async def open_mock_json(model: str):
-        async with aiofiles.open(f"test/mock_data/mock_{model}.json", "r") as f:
+        async with aiofiles.open(
+            f"test/mock_data/mock_{model}.json", "r", encoding="utf-8"
+        ) as f:
             return json.loads(await f.read())
 
     lst_json_model = ["brands", "categories", "sneakers"]

@@ -17,6 +17,7 @@ class SneakerShemas(BaseModel):
 class SneakerFilterShemas(BaseModel):
     name: str = None
     brand_id: int = None
-    price: Decimal = None
+    price_min: Decimal = None
+    price_max: Decimal = None
     size: str = None
     color: str = None
