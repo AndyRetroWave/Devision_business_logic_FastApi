@@ -34,6 +34,6 @@ async def get_sneaker_by_filter(item: SneakerFilterShemas = Query()):
         if result:
             return result
         else:
-            raise HTTPException(status_code=HTTP_401_UNAUTHORIZED)
+            return {"massege": "Ничего не найдено"}
     except Exception:
         raise HTTPException(status_code=HTTP_401_UNAUTHORIZED)

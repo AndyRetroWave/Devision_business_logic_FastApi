@@ -19,6 +19,12 @@ class Settings(BaseSettings):
     TEST_DB_PORT: int
     TEST_DB_USER: str
 
+    ADMIN_EMAIL: str
+    ADMIN_PASS: str
+
+    SECRET_KEY_JWT: str
+    ALGORITM: str
+
     @property
     def db_connect(self):
         return f"postgresql+asyncpg://{self.DB_USER}:{self.DB_PASS}@{self.DB_HOST}:{self.DB_PORT}/{self.DB_NAME}"

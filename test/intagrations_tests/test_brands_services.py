@@ -21,7 +21,7 @@ async def test_get_brands_in_database():
 
 @pytest.mark.asyncio
 async def test_delete_brands():
-    name_1 = "Adidas"
+    name_1 = "Nike2"
     name_2 = "Zoom"
 
     result_true = await service.delete(name_1)

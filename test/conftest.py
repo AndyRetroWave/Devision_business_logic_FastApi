@@ -33,8 +33,8 @@ async def prepare_database():
 
     async def prepare_model_data(iter, json_model):
         async with async_session_maker() as session:
-            smtp = insert(iter).values(await open_mock_json(json_model))
-            await session.execute(smtp)
+            query = insert(iter).values(await open_mock_json(json_model))
+            await session.execute(query)
             await session.commit()
 
     for iter, json_model in zip(LST_MODEL, lst_json_model):

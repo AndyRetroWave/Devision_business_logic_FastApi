@@ -1,13 +1,34 @@
+from decimal import Decimal
+
 from app.bisnes_services.daos.sneakers_dao import SneakerDao
+from app.bisnes_services.repository.utils import (
+    creation_dict_with_parameters_for_filter_sneakers,
+    get_result_for_sneaker_with_filter_on_database,
+)
 from app.bisnes_services.shemas.sneakers_shemas import (
     SneakerFilterShemas,
     SneakerShemas,
 )
+from app.logger import logger
 
 
 class SneakerService:
     dao = SneakerDao()
 
+    def _except_logger(func):
+        async def wrapper(self, *args, **kwargs):
+            try:
+                return await func(self, *args, **kwargs)
+            except Exception as e:
+                logger.error(
+                    "Произошла ошибка в SneakerService.{}".format(func.__name__)
+                    + f"\n{str(e.__doc__)}"
+                )
+                raise Exception()
+
+        return wrapper
+
+    @_except_logger
     async def set_sneakers_in_database(self, item: SneakerShemas):
         if await self.dao.add_item(
             name=item.name,
@@ -22,51 +43,30 @@ class SneakerService:
             return True
         return False
 
+    @_except_logger
     async def get_sneakers_by_id(self, id: int):
         result = await self.dao.get_item_by_id(id)
         if result:
             return result
         return False
 
+    @_except_logger
     async def get_by_filter(self, item: SneakerFilterShemas):
-        filter_params = {}
+        filter_params: dict = await creation_dict_with_parameters_for_filter_sneakers(
+            item
+        )
 
-        if item.name is not None:
-            filter_params["name"] = item.name
-        if item.brand_id is not None:
-            filter_params["brand_id"] = item.brand_id
-        if item.price_max is not None:
-            filter_params["price_max"] = item.price_max
-        if item.price_min is not None:
-            filter_params["price_min"] = item.price_min
-        if item.size is not None:
-            filter_params["size"] = item.size
-        if item.color is not None:
-            filter_params["color"] = item.color
-
-        price_min = filter_params.get("price_min")
-        price_max = filter_params.get("price_max")
+        price_min: Decimal | None = filter_params.get("price_min")
+        price_max: Decimal | None = filter_params.get("price_max")
 
         filter_params.pop("price_min", None)
         filter_params.pop("price_max", None)
 
-        if price_min is not None and price_max is not None:
-            if price_min < price_max:
-                result = await self.dao.get_item_by_filter_price_min_and_max(
-                    price_min, price_max, **filter_params
-                )
-            else:
-                raise ValueError("price_min must be less than price_max")
-        elif price_min is not None:
-            result = await self.dao.get_item_by_filter_price_min(
-                price_min, **filter_params
-            )
-        elif price_max is not None:
-            result = await self.dao.get_item_by_filter_price_max(
-                price_max, **filter_params
-            )
-        else:
-            result = await self.dao.get_item_by_filter(**filter_params)
-        if result:
-            return result
+        result_filter: (
+            SneakerShemas | None
+        ) = await get_result_for_sneaker_with_filter_on_database(
+            self.dao, price_min, price_max, **filter_params
+        )
+        if result_filter is not None:
+            return result_filter
         return False

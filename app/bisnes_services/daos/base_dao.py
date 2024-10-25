@@ -1,9 +1,8 @@
-from app.logger import logger
-
 from sqlalchemy import insert, select
 from sqlalchemy.exc import IntegrityError, OperationalError, SQLAlchemyError
 
 from app.database import async_session_maker
+from app.logger import logger
 
 
 def session_handler(func):
@@ -24,7 +23,7 @@ def session_handler(func):
             logger.error("Произошла ошибка базы: %s", e.args)
             raise SQLAlchemyError()
         except Exception as e:
-            logger.error("Произошла неизвестная ошибка в базе: %s", e.args)
+            logger.error("Произошла неизвестная ошибка в базе: %s", e)
             raise Exception()
 
     return wrapper
@@ -35,8 +34,8 @@ class BaseDao:
 
     @session_handler
     async def add_item(self, session, **kwargs) -> bool:
-        smtp = insert(self.model).values(**kwargs)
-        await session.execute(smtp)
+        query = insert(self.model).values(**kwargs)
+        await session.execute(query)
         return True
 
     @session_handler
