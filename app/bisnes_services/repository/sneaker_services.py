@@ -1,10 +1,4 @@
-from decimal import Decimal
-
 from app.bisnes_services.daos.sneakers_dao import SneakerDao
-from app.bisnes_services.repository.utils import (
-    creation_dict_with_parameters_for_filter_sneakers,
-    get_result_for_sneaker_with_filter_on_database,
-)
 from app.bisnes_services.shemas.sneakers_shemas import (
     SneakerFilterShemas,
     SneakerShemas,
@@ -52,21 +46,7 @@ class SneakerService:
 
     @_except_logger
     async def get_by_filter(self, item: SneakerFilterShemas):
-        filter_params: dict = await creation_dict_with_parameters_for_filter_sneakers(
-            item
-        )
-
-        price_min: Decimal | None = filter_params.get("price_min")
-        price_max: Decimal | None = filter_params.get("price_max")
-
-        filter_params.pop("price_min", None)
-        filter_params.pop("price_max", None)
-
-        result_filter: (
-            SneakerShemas | None
-        ) = await get_result_for_sneaker_with_filter_on_database(
-            self.dao, price_min, price_max, **filter_params
-        )
-        if result_filter is not None:
-            return result_filter
+        result = await self.dao.get_item_by_filter_all(item)
+        if result:
+            return result
         return False

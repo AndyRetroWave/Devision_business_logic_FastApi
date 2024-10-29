@@ -1,10 +1,13 @@
-from decimal import Decimal
-
 from sqlalchemy import select
 
 from app.bisnes_services.daos.base_dao import BaseDao, session_handler
+from app.bisnes_services.models.brands import Brands
+from app.bisnes_services.models.categories import Categories
 from app.bisnes_services.models.sneakers import Sneakers
-from app.bisnes_services.shemas.sneakers_shemas import SneakerShemas
+from app.bisnes_services.shemas.sneakers_shemas import (
+    SneakerFilterShemas,
+    SneakerShemas,
+)
 
 
 class SneakerDao(BaseDao):
@@ -18,63 +21,29 @@ class SneakerDao(BaseDao):
         return smpt.scalar() or None
 
     @session_handler
-    async def get_item_by_filer(
-        self, session, name: str, **item
-    ) -> SneakerShemas | None:
-        if name is not None:
-            query = select(self.model).filter(self.model.name.like(f"%{name}%"))
-        else:
-            query = await session.execute(select(self.model).filter_by(**item))
-        return query.scalars().all() or None
-
-    @session_handler
-    async def get_item_by_filter_price_min_and_max(
-        self,
-        session,
-        price_min: Decimal,
-        price_max: Decimal,
-        name: str | None = None,
-        **iter,
-    ):
-        query = select(self.model).where(
-            self.model.price >= price_min,
-            self.model.price <= price_max,
-        )
-        if name is not None:
-            query = query.filter(self.model.name.like(f"%{name}%"))
-        query = query.filter_by(**iter)
-        query = await session.execute(query)
-        return query.scalars().all() or None
-
-    @session_handler
-    async def get_item_by_filter_price_min(
-        self, session, price_min: Decimal, name: str | None = None, **iter
-    ) -> SneakerShemas | None:
-        query = select(self.model).where(self.model.price >= price_min)
-        if name is not None:
-            query = query.filter(self.model.name.like(f"%{name}%"))
-        query = query.filter_by(**iter)
-        result = await session.execute(query)
-        return result.scalars().all() or None
-
-    @session_handler
-    async def get_item_by_filter_price_max(
-        self, session, price_max: Decimal, name: str | None = None, **iter
-    ) -> SneakerShemas | None:
-        query = select(self.model).where(self.model.price <= price_max)
-        if name is not None:
-            query = query.filter(self.model.name.like(f"%{name}%"))
-        query = query.filter_by(**iter)
-        result = await session.execute(query)
-        return result.scalars().all() or None
-
-    @session_handler
-    async def get_item_by_filter(
-        self, session, name: str | None = None, **iter
-    ) -> SneakerShemas | None:
+    async def get_item_by_filter_all(self, session, item: SneakerFilterShemas):
         query = select(self.model)
-        if name is not None:
-            query = query.filter(self.model.name.like(f"%{name}%"))
-        query = query.filter_by(**iter)
+
+        filters = []
+
+        if item.categories:
+            filters.append(Categories.name == item.categories)
+        if item.brand:
+            filters.append(Brands.name == item.brand)
+        if item.name:
+            filters.append(self.model.name.like(f"%{item.name}%"))
+        if item.price_min is not None:
+            filters.append(self.model.price >= item.price_min)
+        if item.price_max is not None:
+            filters.append(self.model.price <= item.price_max)
+        if item.color:
+            filters.append(self.model.color == item.color)
+        if item.size:
+            filters.append(self.model.size == item.size)
+
+        # Применяем фильтры к запросу
+        if filters:
+            query = query.where(*filters)
+
         result = await session.execute(query)
         return result.scalars().all() or None

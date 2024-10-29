@@ -1,3 +1,4 @@
+from typing import Any
 from sqlalchemy import insert, select
 from sqlalchemy.exc import IntegrityError, OperationalError, SQLAlchemyError
 
@@ -39,6 +40,6 @@ class BaseDao:
         return True
 
     @session_handler
-    async def get_item(self, session):
+    async def get_item(self, session) -> Any:
         result = await session.execute(select(self.model))
         return result.scalars().all()

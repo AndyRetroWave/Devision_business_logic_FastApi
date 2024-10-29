@@ -28,7 +28,9 @@ async def get_sneaker_by_id(id: int):
 
 
 @router_sneaker.get("/get_by_filter")
-async def get_sneaker_by_filter(item: SneakerFilterShemas = Query()):
+async def get_sneaker_by_filter(
+    item: SneakerFilterShemas = Query(),
+):
     try:
         result = await sneaker_services.get_by_filter(item)
         if result:
