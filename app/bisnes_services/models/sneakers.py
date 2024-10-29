@@ -15,10 +15,3 @@ class Sneakers(Base):
     color = Column(VARCHAR)
     description = Column(VARCHAR)
     image_url = Column(VARCHAR)
-
-
-class Categories(Base):
-    __tablename__ = "categories"
-
-    categories_id = Column(Integer, primary_key=True)
-    name = Column(VARCHAR, unique=True)
