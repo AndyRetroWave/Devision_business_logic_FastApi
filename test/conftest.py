@@ -11,7 +11,7 @@ from app.bisnes_services.models.sneakers import Sneakers
 from app.config import settings
 from app.database import Base, async_session_maker, engine
 
-LST_MODEL = [Brands, Categories, Sneakers]
+LST_MODEL = (Brands, Categories, Sneakers)
 
 
 @pytest.fixture(scope="session", autouse=True)

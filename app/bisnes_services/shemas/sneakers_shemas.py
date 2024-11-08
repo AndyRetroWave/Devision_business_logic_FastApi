@@ -15,10 +15,10 @@ class SneakerShemas(BaseModel):
 
 
 class SneakerFilterShemas(BaseModel):
-    name: str = None
-    price_min: Decimal = None
-    price_max: Decimal = None
-    categories: str = None
-    brand: str = None
-    size: str = None
-    color: str = None
+    name: str | None = None
+    price_min: Decimal | None = None
+    price_max: Decimal | None = None
+    categories: str | None = None
+    brand: str | None = None
+    size: str | None = None
+    color: str | None = None

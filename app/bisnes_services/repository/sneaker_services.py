@@ -24,7 +24,7 @@ class SneakerService:
 
     @_except_logger
     async def set_sneakers_in_database(self, item: SneakerShemas):
-        if await self.dao.add_item(
+        result = await self.dao.add_item(
             name=item.name,
             brand_id=item.brand_id,
             category=item.category,
@@ -33,9 +33,9 @@ class SneakerService:
             color=item.color,
             description=item.description,
             image_url=item.image_url,
-        ):
-            return True
-        return False
+        )
+        if result:
+            return result
 
     @_except_logger
     async def get_sneakers_by_id(self, id: int):
@@ -49,4 +49,10 @@ class SneakerService:
         result = await self.dao.get_item_by_filter_all(item)
         if result:
             return result
+        return False
+
+    async def delete_sneakers_id_services(self, id: int):
+        result = await self.dao.delete_item_by_id(id)
+        if result:
+            return True
         return False

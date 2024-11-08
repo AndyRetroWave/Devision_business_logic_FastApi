@@ -1,4 +1,5 @@
 from typing import Any
+import sentry_sdk
 from sqlalchemy import insert, select
 from sqlalchemy.exc import IntegrityError, OperationalError, SQLAlchemyError
 
@@ -25,6 +26,7 @@ def session_handler(func):
             raise SQLAlchemyError()
         except Exception as e:
             logger.error("Произошла неизвестная ошибка в базе: %s", e)
+            sentry_sdk.capture_exception(e)
             raise Exception()
 
     return wrapper
@@ -36,8 +38,8 @@ class BaseDao:
     @session_handler
     async def add_item(self, session, **kwargs) -> bool:
         query = insert(self.model).values(**kwargs)
-        await session.execute(query)
-        return True
+        result = await session.execute(query)
+        return result
 
     @session_handler
     async def get_item(self, session) -> Any:
